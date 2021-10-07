@@ -4,6 +4,8 @@ def dm(a,b):
   for i in range(len(str(a))):
     if(int(a*(10**i))==int(b*(10**i))):
       d+=1
+  if(str(float(a)).split(".")==str(float(b)).split(".") and str(int(a))==str(int(b))):
+    return 128
   return d
 class Symbolic:
   def __init__(self, floatv, strval=-1):
@@ -33,18 +35,28 @@ class Symbolic:
   def times(self, b):
     if(isinstance(b,int)):
       b=sym(b)
-    if(dm(b.value,self.value)>16):
+    if(dm(float(b.value),float(self.value))>16):
       return self.pow(sym(2))
     if(self.value==0 or b.value==0):
       return Symbolic(0)
-    return Symbolic(self.value * b.value, self.strval+"("+b.strval+")")
+    if(b.value==1):
+       return self
+    if(self.value==1):
+      return b
+    return Symbolic(self.value * b.value, b.strval+"("+self.strval+")")
   def divided_by(self, b):
+    if(dm(self.value,b.value)>16):
+      return Symbolic(1)
+    if(self.value==1 and (str(b.value)*10)[-1]!="0"):
+      return b.pow(sym(-1))
+    if(b.value==1):
+      return self
     return Symbolic(self.value / b.value, self.strval+"/"+b.strval)
   def to_the_power_of(self, b):
     if(b.value==0):
       return sym(1)
     elif(b.value==1):
-      return sym(self.value)
+      return self
     return Symbolic(self.value ** b.value, "("+self.strval+")^"+b.strval)
   def __str__(self):
     return self.strval
@@ -69,10 +81,9 @@ def sum(f,s,e):
 def sym(v,x=-1):
   return Symbolic(v,x)
 def reimann(f,a,b,n):
-  p=0
-  for i in range(1,n):
-    p+=f((a+(i-1))*((b-a)/n))*((b-a)/n)
-  return p
+  dx=((b-a)/n)
+  return dx*(f(a)+sum(lambda v:f(a+(v*dx)), 0,n-1))
+  
 def integrate(f,a,b):
   return reimann(f,a,b,Symp.iter)
 def sqrt(v):
@@ -106,7 +117,7 @@ class Symp:
   def plugin(self,f,n):
     for i in n:
       setattr(Symbolic,i,f)
-
+ 
 def zero(self):
   self.value=0
   self.strval="0"
@@ -114,3 +125,6 @@ def zero(self):
 
 setattr(Symp,"iter", 5000)  
 Symp().plugin(zero,["zero","z"])
+e=sym(math.e)
+pi=sym(math.pi)
+sqrt2=sym(2).sqrt()
