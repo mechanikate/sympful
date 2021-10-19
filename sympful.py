@@ -13,7 +13,7 @@ def decimals_matching(decimal_a, decimal_b):
 
 
 class Symbolic:
-    def __init__(self, float_value, strval=-1):
+    def __init__(self, float_value, string_value=-1):
         self.value = float_value
         if (strval == -1):
             self.strval = str(float_value)
@@ -21,8 +21,8 @@ class Symbolic:
             self.strval = "pi"
         if (dm(float_value, math.e) > 15):
             self.strval = "e"
-        if (strval != -1):
-            self.strval = strval
+        if (string_value != -1):
+            self.strval = string_value
 
     def sqrt(self):
         return Symbolic(math.sqrt(self.value), "(" + self.strval + "^(1/2))")
