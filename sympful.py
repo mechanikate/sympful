@@ -4,10 +4,11 @@ import math
 def decimals_matching(decimal_a, decimal_b):
     d = 0
     for i in range(len(str(decimal_a))):
-        if (int(decimal_a * (10**i)) == int(decimal_b * (10**i))):
+        if int(decimal_a * (10 ** i)) == int(decimal_b * (10 ** i)):
             d += 1
-    if (str(float(decimal_a)).split(".") == str(float(decimal_b)).split(".")
-            and str(int(decimal_a)) == str(int(decimal_b))):
+    if str(float(decimal_a)).split(".") == str(float(decimal_b)).split(".") and str(
+        int(decimal_a)
+    ) == str(int(decimal_b)):
         return 128
     return d
 
@@ -15,28 +16,29 @@ def decimals_matching(decimal_a, decimal_b):
 class Symbolic:
     def __init__(self, float_value, string_value=-1):
         self.value = float_value
-        if (string_value == -1):
+        if string_value == -1:
             self.string_value = str(float_value)
-        if (decimals_matching(float_value, math.pi) > 15):
+        if decimals_matching(float_value, math.pi) > 15:
             self.string_value = "pi"
-        if (decimals_matching(float_value, math.e) > 15):
+        if decimals_matching(float_value, math.e) > 15:
             self.string_value = "e"
-        if (string_value != -1):
+        if string_value != -1:
             self.string_value = string_value
 
     def sqrt(self):
         return Symbolic(math.sqrt(self.value), "(" + self.string_value + "^(1/2))")
 
     def nrt(self, n):
-        return Symbolic(self.value**(1 / n),
-                        "(" + self.string_value + ")^(1/" + str(n) + ")")
+        return Symbolic(
+            self.value ** (1 / n), "(" + self.string_value + ")^(1/" + str(n) + ")"
+        )
 
     def plus(self, b):
-        if (b.value == 0):
+        if b.value == 0:
             return self
-        elif (self.value == 0):
+        elif self.value == 0:
             return b
-        elif (self.value == b.value):
+        elif self.value == b.value:
             return Symbolic(self.value * 2, self.string_value + "+" + b.string_value)
         return Symbolic(self.value + b.value, self.string_value + "+" + b.string_value)
 
@@ -44,35 +46,37 @@ class Symbolic:
         return Symbolic(self.value - b.value, self.string_value + "-" + b.string_value)
 
     def times(self, b):
-        if (isinstance(b, int)):
+        if isinstance(b, int):
             b = sym(b)
-        if (dm(float(b.value), float(self.value)) > 16):
+        if dm(float(b.value), float(self.value)) > 16:
             return self.pow(sym(2))
-        if (self.value == 0 or b.value == 0):
+        if self.value == 0 or b.value == 0:
             return Symbolic(0)
-        if (b.value == 1):
+        if b.value == 1:
             return self
-        if (self.value == 1):
+        if self.value == 1:
             return b
-        return Symbolic(self.value * b.value,
-                        b.string_value + "(" + self.string_value + ")")
+        return Symbolic(
+            self.value * b.value, b.string_value + "(" + self.string_value + ")"
+        )
 
     def divided_by(self, b):
-        if (dm(self.value, b.value) > 16):
+        if dm(self.value, b.value) > 16:
             return Symbolic(1)
-        if (self.value == 1 and (str(b.value) * 10)[-1] != "0"):
+        if self.value == 1 and (str(b.value) * 10)[-1] != "0":
             return b.pow(sym(-1))
-        if (b.value == 1):
+        if b.value == 1:
             return self
         return Symbolic(self.value / b.value, self.string_value + "/" + b.string_value)
 
     def to_the_power_of(self, b):
-        if (b.value == 0):
+        if b.value == 0:
             return sym(1)
-        elif (b.value == 1):
+        elif b.value == 1:
             return self
-        return Symbolic(self.value**b.value,
-                        "(" + self.string_value + ")^" + b.string_value)
+        return Symbolic(
+            self.value ** b.value, "(" + self.string_value + ")^" + b.string_value
+        )
 
     def __str__(self):
         return self.string_value
@@ -103,7 +107,7 @@ def sym(v, x=-1):
 
 
 def reimann(f, a, b, n):
-    dx = ((b - a) / n)
+    dx = (b - a) / n
     return dx * (f(a) + sum(lambda v: f(a + (v * dx)), 0, n - 1))
 
 
