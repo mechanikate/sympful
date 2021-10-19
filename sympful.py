@@ -2,6 +2,8 @@ import math
 
 
 def decimals_matching(decimal_a, decimal_b):
+    """Finds how many decimals of decimal_a match with decimal_b.
+    An example of this would be 3.1415999 and 3.1415998; 7 decimals would match because 3.141599 matches in both."""
     d = 0
     for i in range(len(str(decimal_a))):
         if int(decimal_a * (10 ** i)) == int(decimal_b * (10 ** i)):
