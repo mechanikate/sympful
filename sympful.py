@@ -15,21 +15,21 @@ def decimals_matching(decimal_a, decimal_b):
 class Symbolic:
     def __init__(self, float_value, string_value=-1):
         self.value = float_value
-        if (strval == -1):
-            self.strval = str(float_value)
-        if (dm(float_value, math.pi) > 15):
-            self.strval = "pi"
-        if (dm(float_value, math.e) > 15):
-            self.strval = "e"
+        if (string_value == -1):
+            self.string_value = str(float_value)
+        if (decimals_matching(float_value, math.pi) > 15):
+            self.string_value = "pi"
+        if (decimals_matching(float_value, math.e) > 15):
+            self.string_value = "e"
         if (string_value != -1):
-            self.strval = string_value
+            self.string_value = string_value
 
     def sqrt(self):
-        return Symbolic(math.sqrt(self.value), "(" + self.strval + "^(1/2))")
+        return Symbolic(math.sqrt(self.value), "(" + self.string_value + "^(1/2))")
 
     def nrt(self, n):
         return Symbolic(self.value**(1 / n),
-                        "(" + self.strval + ")^(1/" + str(n) + ")")
+                        "(" + self.string_value + ")^(1/" + str(n) + ")")
 
     def plus(self, b):
         if (b.value == 0):
@@ -37,11 +37,11 @@ class Symbolic:
         elif (self.value == 0):
             return b
         elif (self.value == b.value):
-            return Symbolic(self.value * 2, self.strval + "+" + b.strval)
-        return Symbolic(self.value + b.value, self.strval + "+" + b.strval)
+            return Symbolic(self.value * 2, self.string_value + "+" + b.string_value)
+        return Symbolic(self.value + b.value, self.string_value + "+" + b.string_value)
 
     def minus(self, b):
-        return Symbolic(self.value - b.value, self.strval + "-" + b.strval)
+        return Symbolic(self.value - b.value, self.string_value + "-" + b.string_value)
 
     def times(self, b):
         if (isinstance(b, int)):
@@ -55,7 +55,7 @@ class Symbolic:
         if (self.value == 1):
             return b
         return Symbolic(self.value * b.value,
-                        b.strval + "(" + self.strval + ")")
+                        b.string_value + "(" + self.string_value + ")")
 
     def divided_by(self, b):
         if (dm(self.value, b.value) > 16):
@@ -64,7 +64,7 @@ class Symbolic:
             return b.pow(sym(-1))
         if (b.value == 1):
             return self
-        return Symbolic(self.value / b.value, self.strval + "/" + b.strval)
+        return Symbolic(self.value / b.value, self.string_value + "/" + b.string_value)
 
     def to_the_power_of(self, b):
         if (b.value == 0):
@@ -72,10 +72,10 @@ class Symbolic:
         elif (b.value == 1):
             return self
         return Symbolic(self.value**b.value,
-                        "(" + self.strval + ")^" + b.strval)
+                        "(" + self.string_value + ")^" + b.string_value)
 
     def __str__(self):
-        return self.strval
+        return self.string_value
 
     __repr__ = __str__
     add = plus
@@ -167,7 +167,7 @@ class Symp:
 
 def zero(self):
     self.value = 0
-    self.strval = "0"
+    self.string_value = "0"
     return self
 
 
