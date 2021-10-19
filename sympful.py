@@ -1,25 +1,25 @@
 import math
 
 
-def dm(a, b):
+def decimals_matching(decimal_a, decimal_b):
     d = 0
-    for i in range(len(str(a))):
-        if (int(a * (10**i)) == int(b * (10**i))):
+    for i in range(len(str(decimal_a))):
+        if (int(decimal_a * (10**i)) == int(decimal_b * (10**i))):
             d += 1
-    if (str(float(a)).split(".") == str(float(b)).split(".")
-            and str(int(a)) == str(int(b))):
+    if (str(float(decimal_a)).split(".") == str(float(decimal_b)).split(".")
+            and str(int(decimal_a)) == str(int(decimal_b))):
         return 128
     return d
 
 
 class Symbolic:
-    def __init__(self, floatv, strval=-1):
-        self.value = floatv
+    def __init__(self, float_value, strval=-1):
+        self.value = float_value
         if (strval == -1):
-            self.strval = str(floatv)
-        if (dm(floatv, math.pi) > 15):
+            self.strval = str(float_value)
+        if (dm(float_value, math.pi) > 15):
             self.strval = "pi"
-        if (dm(floatv, math.e) > 15):
+        if (dm(float_value, math.e) > 15):
             self.strval = "e"
         if (strval != -1):
             self.strval = strval
